@@ -6,7 +6,12 @@
             "branch": "<ADD YOUR BRANCH NAME HERE",
             "commit_message": "Auto-sync: {timestamp}",
 	    "username": "<ADD YOUR USERNAME HERE>",
-	    "token": "<ADD YOUR GITHUB WRITE ACCESS TOKEN HERE>"
+	    "token": "<ADD YOUR GITHUB WRITE ACCESS TOKEN HERE>",
+	    "tracked_files": [
+                "sample0.txt",
+                "sample1.txt",
+                "sample2.txt"
+            ]
         }
     ]
 }
