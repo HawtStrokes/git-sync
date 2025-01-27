@@ -8,6 +8,12 @@ def update_remote_url(repo_path, username, token):
     Update the remote URL to include GitHub username and personal access token for authentication.
     """
     repo = Repo(repo_path)
+    
+    # If there are no remotes, do not proceed with updating the URL.
+    if len(repo.remotes) == 0:
+        print(f"No remotes found in the repository at {repo_path}. Skipping remote URL update.")
+        return
+
     origin = repo.remotes.origin
     new_url = f"https://{username}:{token}@github.com/{username}/{repo.remotes.origin.url.split('/')[-1]}"
     origin.set_url(new_url)
@@ -27,8 +33,9 @@ def sync_folder(folder_config, push_changes=True):
 
     repo = Repo(folder)
 
-    # Update the remote URL to use the provided username and token for authentication
-    update_remote_url(folder, username, token)
+    # Only update remote URL if push_changes is True (no need to do this if we're not pushing)
+    if push_changes:
+        update_remote_url(folder, username, token)
 
     # Commit and (optionally) push changes
     if repo.is_dirty(untracked_files=True):
@@ -42,5 +49,4 @@ def sync_folder(folder_config, push_changes=True):
             origin.push(branch)
         else:
             print(f"Changes committed to {folder}, but not pushed to the remote repository.")
-
 
