@@ -114,3 +114,79 @@ By default, `git-sync` excludes changes in Git-related files (e.g., `.git/config
 
 You can modify this behavior by editing the `watcher.py` file if you need to include or exclude specific files.
 
+---
+
+## Turning `git-sync` into a Daemon
+
+To run `git-sync` as a background service on a Linux system, use **systemd**. This will allow the script to run continuously and sync your folder to the Git repository automatically.
+
+### Step 1: Create the Systemd Service File
+
+1. Open the terminal and create a new systemd service file:
+
+   ```
+   sudo nano /etc/systemd/system/git-sync.service
+   ```
+
+2. Add the following content:
+
+   ```
+   [Unit]
+   Description=Git Sync Daemon
+   After=network.target
+
+   [Service]
+   Type=simple
+   User=root
+   Group=root
+   WorkingDirectory=/path/to/your/git-sync/folder
+   ExecStart=/bin/bash -c 'source /path/to/your/venv/bin/activate && python -m git-sync'
+   Restart=always
+
+   [Install]
+   WantedBy=multi-user.target
+   ```
+
+   - Replace `/path/to/your/git-sync/folder` and `/path/to/your/venv` with your actual paths.
+
+### Step 2: Reload systemd and Enable the Service
+
+1. Reload systemd to apply the new service:
+
+   ```
+   sudo systemctl daemon-reload
+   ```
+
+2. Enable the service to start automatically on boot:
+
+   ```
+   sudo systemctl enable git-sync.service
+   ```
+
+### Step 3: Start the Service
+
+Start the service manually:
+
+```
+sudo systemctl start git-sync.service
+```
+
+### Step 4: Check the Service Status
+
+To ensure the service is running, use:
+
+```
+sudo systemctl status git-sync.service
+```
+
+### Step 5: View Service Logs
+
+To view logs for troubleshooting:
+
+```
+sudo journalctl -u git-sync.service
+```
+
+---
+
+This provides a concise way to turn `git-sync` into a background service. Let me know if you need further modifications!
